@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') { 
+            steps {
+                echo "Building"
+            }
+        }
+        stage('Test') { 
+            steps {
+                echo "Testing"
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                echo "Deploying"
+                echo "$BUILD_NUMBER"
+            }
+        }           
+    }
+    post {
+        failure {
+            emailext(
+                subject: "Jenkins Build Failed: ${currentBuild.fullDisplayName}",
+                body: "The build failed. Please check the Jenkins console for details.",
+                to: "balakrishnan316siva@gmail.com"
+            )
+        }
+        success {
+            emailext(
+                subject: "Jenkins Build Successful: ${currentBuild.fullDisplayName}",
+                body: "The Pipeline was successful.",
+                to: "balakrishnan316siva@gmail.com"
+            )
+        }
+    }
+}
